@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TalentLens – AI Recruitment Demo</title>
+<style>
+:root{color-scheme:light dark;--bg:#f5f6fa;--card:#ffffff;--tx:#2a3144;--mut:#6b7489;--bd:#e5e8f0;--pri:#5b6cf0;--prib:#eceefe;--ok:#16a34a;--okb:#e7f7ec;--warn:#d97706;--warnb:#fdf3e0;--bad:#dc2626;--badb:#fdeaea;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#181b26;--card:#212536;--tx:#d8dbe8;--mut:#98a0b8;--bd:#2f3550;--pri:#8f9dff;--prib:#2b3150;--ok:#74d6a0;--warn:#e9bd6e;--bad:#f09c9c;--okb:#22392f;--warnb:#3a3324;--badb:#3d2a33}}
+*{box-sizing:border-box}html,body{margin:0}body{font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--tx)}
+#app{display:flex;min-height:100vh}
+nav{width:210px;flex:none;background:var(--card);border-right:1px solid var(--bd);padding:16px 10px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:2px}
+nav h1{font-size:17px;margin:0 8px 14px;color:var(--pri)}
+nav button{all:unset;cursor:pointer;padding:10px 14px;border-radius:10px;color:var(--mut);font-weight:500}
+nav button.on,nav button:hover{background:var(--prib);color:var(--pri)}
+nav .sp{flex:1}nav .lg{margin:4px 8px;padding:5px}
+main{flex:1;min-width:0;padding:22px;max-width:1200px}
+h2{margin:0 0 4px;font-size:20px;font-weight:600}.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px #0000000d}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.stat b{display:block;font-size:24px;font-weight:600}.stat span{color:var(--mut)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+input,select,textarea{font:inherit;color:var(--tx);background-color:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px 12px;max-width:100%}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--pri);box-shadow:0 0 0 3px var(--prib)}
+select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:32px;background-repeat:no-repeat;background-position:right 11px center;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27><path d=%27M2 4l4 4 4-4%27 fill=%27none%27 stroke=%27%23999%27 stroke-width=%271.6%27 stroke-linecap=%27round%27/></svg>')}
+option{background:var(--card);color:var(--tx)}option:checked{background:var(--prib)}
+textarea{width:100%;min-height:90px}label{display:block;font-weight:600;margin:10px 0 3px;font-size:13px}
+.f input,.f select{width:100%}
+.btn{cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:8px 14px;font:inherit;font-weight:500;transition:background .15s,filter .15s}.btn:hover{background:var(--prib)}.btn.p:hover{filter:brightness(1.1)}
+.btn.p{background:var(--pri);color:var(--bg);border-color:var(--pri)}.btn.d{color:var(--bad)}.btn.s{padding:4px 9px;font-size:12px}
+.chip{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;margin:2px 3px 2px 0;background:var(--prib);color:var(--mut)}
+.chip.ok{background:var(--okb);color:var(--ok)}.chip.warn{background:var(--warnb);color:var(--warn)}.chip.bad{background:var(--badb);color:var(--bad)}.chip.g{background:var(--bd);color:var(--mut)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.mut{color:var(--mut)}
+.two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.ring{--p:0;--c:var(--ok);width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--bd) 0);display:grid;place-items:center;flex:none}
+.ring i{font-style:normal;width:84px;height:84px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:24px;font-weight:700}
+.ai{border-left:3px solid var(--pri);background:var(--prib);border-radius:12px;padding:14px 16px;margin-top:12px}
+.ai h3{margin:0 0 6px;font-size:15px}.ai h4{margin:12px 0 4px}.ai ul{margin:0;padding-left:20px}
+.tag{font-size:10px;border:1px solid var(--bd);color:var(--mut);border-radius:4px;padding:1px 6px;vertical-align:middle;font-weight:500}
+.kan{display:grid;grid-template-columns:repeat(6,minmax(190px,1fr));gap:10px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--prib);border-radius:14px;padding:10px;min-height:260px}
+.col.over{outline:2px dashed var(--pri)}.col h4{margin:0 0 8px;display:flex;justify-content:space-between}
+.k{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:9px;margin-bottom:8px;cursor:grab}
+.k select{width:100%;margin-top:6px;padding:4px;font-size:12px}
+.hb{display:flex;align-items:center;gap:8px;margin:5px 0}.hb span:first-child{width:110px;flex:none;font-size:13px}
+.hb div{height:6px;border-radius:3px;background:var(--pri);min-width:3px}
+#fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:6;display:flex;flex-direction:column;align-items:flex-end;gap:8px}#fm{display:flex;flex-direction:column;gap:6px}#fm[hidden]{display:none}#fb{width:48px;height:48px;border-radius:50%;border:0;background:var(--pri);color:var(--bg);font-size:26px;cursor:pointer;box-shadow:0 4px 14px #0003}
+#modal{position:fixed;inset:0;background:#0009;display:none;place-items:center;padding:14px;z-index:9;overflow:auto}
+#modal.on{display:grid}#modal>div{background:var(--card);border-radius:14px;padding:20px;width:min(560px,100%);max-height:92vh;overflow:auto}
+@media(max-width:800px){#app{flex-direction:column}nav{width:100%;height:auto;position:sticky;top:0;z-index:5;flex-direction:row;overflow-x:auto;padding:8px;border-right:0;border-bottom:1px solid var(--bd)}nav h1,nav .sp{display:none}nav button{white-space:nowrap}main{padding:14px}}
+</style></head>
+<body><div id="app">
+<nav id="nav"></nav><main id="main"></main></div><div id="fab"><div id="fm" hidden><button class="btn p" onclick="jobForm();fab()">+ Create New Job</button><button class="btn p" onclick="candForm();fab()">+ Add Candidate</button></div><button id="fb" onclick="fab()" aria-label="Add">+</button></div><div id="modal" onclick="if(event.target===this)closeM()"><div id="mbox"></div></div>
+<script>
+/* ===== TalentLens demo: vanilla JS, state persisted in localStorage ===== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const STAGES=['Applied','Screening','Interview','Offer','Hired','Rejected'];
+const KNOWN=['JavaScript','TypeScript','React','Vue','Angular','Node.js','CSS','HTML','Testing','GraphQL','Accessibility','Redux','Python','SQL','Excel','Tableau','Statistics','Pandas','Figma','Prototyping','User Research','Design Systems','Java','Docker','AWS','Git','Agile','Leadership','Communication'];
+const KEY='talentlens.v2';
+const uid=()=>Math.random().toString(36).slice(2,9);
+const pl=s=>String(s).split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
+const ago=t=>new Date(t).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+
+function seed(){return{
+ jobs:[
+  {id:'j1',title:'Senior Frontend Developer',dept:'Engineering',skills:['React','TypeScript','CSS','Testing','Accessibility','GraphQL'],desc:'Own the web app UI, mentor juniors, and drive quality.',status:'open'},
+  {id:'j2',title:'Data Analyst',dept:'Analytics',skills:['SQL','Python','Tableau','Statistics','Excel'],desc:'Turn product data into decisions.',status:'open'},
+  {id:'j3',title:'Product Designer',dept:'Design',skills:['Figma','User Research','Prototyping','Design Systems'],desc:'Design end-to-end product experiences.',status:'closed'},
+  {id:'j4',title:'Backend Engineer',dept:'Engineering',skills:['Node.js','SQL','Docker','AWS','Git'],desc:'Build and scale APIs and services.',status:'open'},
+  {id:'j5',title:'Full-Stack Developer',dept:'Engineering',skills:['React','Node.js','SQL','TypeScript','Git'],desc:'Ship features across the whole stack.',status:'open'},
+  {id:'j6',title:'DevOps Engineer',dept:'Infrastructure',skills:['Docker','AWS','Git','Python'],desc:'Automate CI/CD and cloud infrastructure.',status:'open'},
+  {id:'j7',title:'QA Engineer',dept:'Quality',skills:['Testing','JavaScript','Agile','Communication'],desc:'Own test strategy and automation.',status:'open'},
+  {id:'j8',title:'Vue Developer',dept:'Engineering',skills:['Vue','JavaScript','CSS','HTML'],desc:'Build components for our Vue storefront.',status:'open'},
+  {id:'j9',title:'Engineering Manager',dept:'Engineering',skills:['Leadership','Agile','Communication','Java'],desc:'Lead a team of 8 engineers.',status:'open'},
+  {id:'j10',title:'Data Scientist',dept:'Analytics',skills:['Python','Pandas','Statistics','SQL'],desc:'Build predictive models for growth.',status:'open'},
+  {id:'j11',title:'UX Researcher',dept:'Design',skills:['User Research','Figma','Communication'],desc:'Run studies and share insights.',status:'closed'},
+  {id:'j12',title:'Product Manager',dept:'Product',skills:['Agile','Communication','Leadership','Excel'],desc:'Define roadmap and priorities.',status:'open'},
+  {id:'j13',title:'Junior Frontend Developer',dept:'Engineering',skills:['HTML','CSS','JavaScript','Git'],desc:'Entry-level role with mentorship.',status:'open'}],
+ cands:[
+  {id:'c1',name:'Aisha Karimova',email:'aisha@example.com',exp:6,skills:['React','TypeScript','CSS','Testing','Redux'],resume:'6 years building React and TypeScript apps. Led migration to Jest/Cypress testing. Improved page speed 40%.',stage:'Interview',jobId:'j1'},
+  {id:'c2',name:'Bobur Tashkentov',email:'bobur@example.com',exp:3,skills:['JavaScript','React','HTML','CSS'],resume:'3 years JavaScript. Built dashboards in React. Cares about accessibility and clean UI.',stage:'Applied',jobId:'j1'},
+  {id:'c3',name:'Dilnoza Rashidova',email:'dilnoza@example.com',exp:4,skills:['SQL','Python','Excel','Tableau'],resume:'4 years analytics. Dashboards in Tableau, ETL in Python and SQL.',stage:'Screening',jobId:'j2'},
+  {id:'c4',name:'Eric Johnson',email:'eric@example.com',exp:8,skills:['Figma','Prototyping','User Research','Design Systems'],resume:'8 years product design; built a design system used by 12 teams.',stage:'Offer',jobId:'j3'},
+  {id:'c5',name:'Farhod Aliyev',email:'farhod@example.com',exp:2,skills:['Python','Pandas','Statistics'],resume:'2 years data science. Pandas, statistics, A/B testing.',stage:'Applied',jobId:'j2'},
+  {id:'c6',name:'Gulnora Yusupova',email:'gulnora@example.com',exp:5,skills:['Node.js','SQL','Docker','Git'],resume:'5 years backend. Node.js APIs, SQL tuning, deployed on AWS with Docker.',stage:'Screening',jobId:'j4'},
+  {id:'c7',name:'Timur Sadikov',email:'timur@example.com',exp:1,skills:['HTML','CSS','JavaScript'],resume:'Junior developer, 1 year. Landing pages, JavaScript, Git basics.',stage:'Applied',jobId:'j13'},
+  {id:'c8',name:'Nodira Hamidova',email:'nodira@example.com',exp:7,skills:['Leadership','Agile','Communication'],resume:'7 years leading teams. Agile coach, ex-Java developer.',stage:'Interview',jobId:'j9'}],
+ log:[{t:Date.now(),m:'Demo data loaded'}]}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.jobs)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const log=m=>{S.log.unshift({t:Date.now(),m});S.log=S.log.slice(0,30);save()};
+const J=id=>S.jobs.find(j=>j.id===id), C=id=>S.cands.find(c=>c.id===id);
+let view='dashboard', ui={jq:'',js:'all',cq:'',cs:'all',ck:'',ce:0,mj:'',mc:'',ran:false};
+
+/* ===== Matching engine: confirmed skill = 1pt, résumé-only mention = 0.5pt ===== */
+function rx(k){return new RegExp('(?<![a-z0-9])'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![a-z0-9])','i')}
+function extract(text){return KNOWN.filter(k=>rx(k).test(text))}
+function match(job,c){
+ const have=c.skills.map(s=>s.toLowerCase()),m=[],u=[],x=[];
+ job.skills.forEach(r=>have.includes(r.toLowerCase())?m.push(r):rx(r).test(c.resume||'')?u.push(r):x.push(r));
+ const n=job.skills.length||1;
+ return{m,u,x,score:Math.round((m.length+u.length*.5)/n*100)};
+}
+const tone=s=>s>=75?'ok':s>=50?'warn':'bad';
+
+/* ===== Demo "AI": rule-based generator (no external API) ===== */
+function aiReportEN(job,c,r){
+ const verdict=r.score>=75?'a strong fit':r.score>=50?'a partial fit':'a weak fit';
+ const why=[`${esc(c.name)} is <b>${verdict}</b> for ${esc(job.title)} (${r.score}% match).`,
+  `Confirmed ${r.m.length} of ${job.skills.length} required skills${r.m.length?': '+r.m.map(esc).join(', '):''}.`,
+  `${c.exp} year${c.exp==1?'':'s'} of experience on record.`];
+ if(r.u.length)why.push(`Résumé mentions <b>${r.u.map(esc).join(', ')}</b> but they are not in the skills list – worth verifying.`);
+ const gaps=[...r.x.map(s=>`<b>${esc(s)}</b> – not found anywhere in the résumé (critical gap).`),
+  ...r.u.map(s=>`<b>${esc(s)}</b> – only implied in résumé text (unconfirmed).`)];
+ const tech=[...r.x.map(s=>`The role requires ${esc(s)}. How would you get productive in it in your first 30 days?`),
+  ...r.u.map(s=>`Your résumé hints at ${esc(s)}. Walk us through a concrete project where you used it.`),
+  ...r.m.slice(0,2).map(s=>`Describe a production problem you solved with ${esc(s)} and the trade-offs you made.`)];
+ const beh=['Tell me about a time you learned a new tool quickly under a deadline.',
+  'Describe a technical disagreement with a teammate and how you resolved it.',
+  `Why ${esc(job.title)}, and why now?`];
+ return`<div class="ai"><h3>AI Assistant <span class="tag">Demo Prototype AI</span></h3>
+ <h4>Skills match explanation</h4><ul>${why.map(w=>`<li>${w}</li>`).join('')}</ul>
+ <h4>Skill gaps / unconfirmed skills</h4>${gaps.length?`<ul>${gaps.map(g=>`<li>${g}</li>`).join('')}</ul>`:'<p class="mut">No gaps – all requirements confirmed.</p>'}
+ <h4>Suggested interview questions</h4><b>Technical</b><ul>${tech.map(q=>`<li>${q}</li>`).join('')}</ul>
+ <b>Behavioral</b><ul>${beh.map(q=>`<li>${q}</li>`).join('')}</ul>
+ <p class="mut" style="font-size:12px;margin:10px 0 0">Rule-based demo output – not a real hiring decision.</p></div>`;
+}
+
+/* ===== Helpers ===== */
+const chips=(a,c='')=>a.map(s=>`<span class="chip ${c}">${esc(s)}</span>`).join('');
+const stageOpts=cur=>STAGES.map(s=>`<option value="${s}" ${s===cur?'selected':''}>${s}</option>`).join('');
+function moveStage(id,st){const c=C(id);if(!c||c.stage===st)return;const old=c.stage;c.stage=st;log(`${c.name}: ${old} → ${st}`);render()}
+function openM(h){$('#mbox').innerHTML=h;$('#modal').classList.add('on')}
+function closeM(){$('#modal').classList.remove('on')}
+function fab(){$('#fm').hidden=!$('#fm').hidden}
+function go(v){view=v;render();scrollTo(0,0)}
+function goMatch(j,c){if(j)ui.mj=j;if(c)ui.mc=c;ui.ran=false;go('matching')}
+function resetDemo(){ask('Reset all data to the demo set?',()=>{S=seed();save();render()},'Reset demo data')}
+
+/* ===== Jobs ===== */
+function jobList(){
+ const q=ui.jq.toLowerCase();
+ const l=S.jobs.filter(j=>(ui.js==='all'||j.status===ui.js)&&(j.title+j.dept+j.skills.join(' ')).toLowerCase().includes(q));
+ return l.map(j=>`<div class="card"><div class="row"><div><b style="font-size:16px">${esc(j.title)}</b>
+ <span class="chip ${j.status==='open'?'ok':'g'}">${j.status}</span><div class="mut">${esc(j.dept)} · ${S.cands.filter(c=>c.jobId===j.id).length} candidates</div></div>
+ <div><button class="btn s p" onclick="goMatch('${j.id}')">Match</button> <button class="btn s" onclick="jobForm('${j.id}')">Edit</button> <button class="btn s" onclick="toggleJob('${j.id}')">${j.status==='open'?'Close':'Reopen'}</button> <button class="btn s d" onclick="delJob('${j.id}')">Delete</button></div></div>
+ <p>${esc(j.desc)}</p>${chips(j.skills)}</div>`).join('')||'<p class="mut">No jobs match.</p>';
+}
+function jobForm(id){const e=J(id)||{};openM(`<h2>${id?'Edit Job':'Create New Job'}</h2><div class="f"><label>Title</label><input id="jt" value="${esc(e.title)}" placeholder="Senior Frontend Developer">
+ <label>Department</label><input id="jd" value="${esc(e.dept)}" placeholder="Engineering"><label>Requirements / skills (comma-separated)</label><input id="js" value="${esc((e.skills||[]).join(', '))}" placeholder="React, TypeScript, CSS">
+ <label>Description</label><textarea id="jx">${esc(e.desc)}</textarea></div><div class="bar" style="margin-top:14px"><button class="btn p" onclick="addJob('${id||''}')">${id?'Save':'Create job'}</button><button class="btn" onclick="closeM()">Cancel</button></div>`)}
+function addJob(id){const t=$('#jt').value.trim(),s=pl($('#js').value);if(!t||!s.length)return alert('Title and at least one skill are required.');
+ const d={title:t,dept:$('#jd').value.trim()||'General',skills:s,desc:$('#jx').value.trim()},o=J(id);
+ if(o){Object.assign(o,d);log(`Job updated: ${t}`)}else{const j={id:uid(),...d,status:'open'};S.jobs.unshift(j);ui.mj=j.id;log(`Job created: ${t}`)}
+ closeM();render()}
+function toggleJob(id){const j=J(id);j.status=j.status==='open'?'closed':'open';log(`${j.title} marked ${j.status}`);render()}
+function delJob(id){ask('Delete this job?',()=>{S.jobs=S.jobs.filter(j=>j.id!==id);S.cands.forEach(c=>{if(c.jobId===id)c.jobId=''});save();render()},'Delete')}
+
+/* ===== Candidates ===== */
+function candList(){
+ const q=ui.cq.toLowerCase(),k=ui.ck.toLowerCase();
+ const l=S.cands.filter(c=>(ui.cs==='all'||c.stage===ui.cs)&&c.exp>=ui.ce&&(c.name+c.email).toLowerCase().includes(q)&&(!k||c.skills.join(' ').toLowerCase().includes(k)));
+ return l.map(c=>`<div class="card"><div class="row"><div><b style="font-size:16px">${esc(c.name)}</b> <span class="chip">${c.stage}</span>
+ <div class="mut">${esc(c.email)} · ${c.exp} yrs${c.jobId&&J(c.jobId)?' · for '+esc(J(c.jobId).title):''}</div></div>
+ <div><button class="btn s p" onclick="goMatch('${c.jobId||''}','${c.id}')">Match</button> <button class="btn s" onclick="candForm('${c.id}')">Edit</button> <button class="btn s d" onclick="delCand('${c.id}')">Delete</button></div></div>
+ <p class="mut" style="margin:6px 0">${esc((c.resume||'').slice(0,160))}</p>${chips(c.skills,'g')}</div>`).join('')||'<p class="mut">No candidates match.</p>';
+}
+function candForm(id,stage){const e=C(id)||{};openM(`<h2>${id?'Edit Candidate':'Add Candidate'}</h2><div class="f"><label>Name</label><input id="cn" value="${esc(e.name)}"><label>Email</label><input id="ce" type="email" value="${esc(e.email)}">
+ <label>Years of experience</label><input id="cx" type="number" min="0" value="${e.exp??3}"><label>Applying for</label><select id="cj"><option value="">— none —</option>${S.jobs.map(j=>`<option value="${j.id}" ${j.id===(id?e.jobId:ui.mj)?'selected':''}>${esc(j.title)}</option>`).join('')}</select>
+ <label>Résumé text <span class="mut">(or simulate upload)</span></label><input type="file" id="cf" accept=".txt,.pdf,.doc,.docx" onchange="simUpload(this)"><textarea id="cr" placeholder="Paste résumé text…">${esc(e.resume)}</textarea>
+ <label>Skills (comma-separated)</label><input id="ck2" value="${esc((e.skills||[]).join(', '))}" placeholder="React, TypeScript"><button class="btn s" style="margin-top:6px" onclick="$('#ck2').value=extract($('#cr').value).join(', ')">Extract skills from résumé</button></div>
+ <div class="bar" style="margin-top:14px"><button class="btn p" onclick="addCand('${id||''}','${stage||'Applied'}')">${id?'Save':'Add candidate'}</button><button class="btn" onclick="closeM()">Cancel</button></div>`)}
+function simUpload(el){const f=el.files[0];if(!f)return;
+ if(/\.txt$/i.test(f.name)){const r=new FileReader();r.onload=()=>{$('#cr').value=r.result};r.readAsText(f)}
+ else $('#cr').value=`[Simulated parse of ${f.name}] Experienced professional with React, TypeScript, CSS and Testing background.`}
+function addCand(id,stage){const n=$('#cn').value.trim();if(!n)return alert('Name is required.');
+ const resume=$('#cr').value;let sk=pl($('#ck2').value);if(!sk.length)sk=extract(resume);
+ const d={name:n,email:$('#ce').value.trim(),exp:+$('#cx').value||0,skills:sk,resume,jobId:$('#cj').value},o=C(id);
+ if(o){Object.assign(o,d);log(`Candidate updated: ${n}`)}else{const c={id:uid(),...d,stage:stage||'Applied'};S.cands.unshift(c);ui.mc=c.id;log(`Candidate added: ${n}`)}
+ closeM();render()}
+function delCand(id){ask('Delete this candidate?',()=>{S.cands=S.cands.filter(c=>c.id!==id);save();render()},'Delete')}
+
+/* ===== Views ===== */
+const V={
+dashboard(){
+ const act=S.cands.filter(c=>!['Hired','Rejected'].includes(c.stage)).length;
+ const sc=S.cands.filter(c=>J(c.jobId)).map(c=>match(J(c.jobId),c).score);
+ const avg=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%':'—';
+ const st=(b,l)=>`<div class="card stat"><b>${b}</b><span>${l}</span></div>`;
+ return`<h2>Dashboard</h2><p class="sub">Recruitment overview</p><div class="grid">${st(S.jobs.length+' <small class="mut">('+S.jobs.filter(j=>j.status==='open').length+' open)</small>','Total jobs')}${st(act,'Active candidates')}${st(S.cands.filter(c=>c.stage==='Hired').length,'Hired')}${st(avg,'Average match score')}</div>
+ <div class="card"><b>Recent activity</b>${S.log.slice(0,8).map(l=>`<div class="hb"><span class="mut" style="width:120px">${ago(l.t)}</span><span>${esc(l.m)}</span></div>`).join('')}</div>
+ <div class="card"><b>5-step demo:</b> <span class="mut">① Jobs → Create · ② Candidates → Add · ③ Matching → Run · ④ Read AI breakdown · ⑤ Pipeline → move stage</span></div>`},
+jobs(){return`<div class="row"><div><h2>Jobs</h2><p class="sub">Open and closed positions</p></div><button class="btn p" onclick="jobForm()">+ Create New Job</button></div>
+ <div class="bar"><input placeholder="Search title, dept, skill…" value="${esc(ui.jq)}" oninput="ui.jq=this.value;$('#list').innerHTML=jobList()">
+ <select onchange="ui.js=this.value;$('#list').innerHTML=jobList()">${['all','open','closed'].map(s=>`<option value="${s}" ${s===ui.js?'selected':''}>${s}</option>`).join('')}</select></div><div id="list">${jobList()}</div>`},
+candidates(){return`<div class="row"><div><h2>Candidates</h2><p class="sub">Talent database</p></div><button class="btn p" onclick="candForm()">+ Add Candidate</button></div>
+ <div class="bar"><input placeholder="Search name/email…" value="${esc(ui.cq)}" oninput="ui.cq=this.value;$('#list').innerHTML=candList()">
+ <input placeholder="Skill filter" value="${esc(ui.ck)}" oninput="ui.ck=this.value;$('#list').innerHTML=candList()">
+ <select onchange="ui.cs=this.value;$('#list').innerHTML=candList()"><option value="all">All stages</option>${STAGES.map(s=>`<option value="${s}" ${s===ui.cs?'selected':''}>${s}</option>`).join('')}</select>
+ <label style="margin:0;font-weight:400">Min exp <input type="number" min="0" style="width:64px" value="${ui.ce}" oninput="ui.ce=+this.value||0;$('#list').innerHTML=candList()"></label></div><div id="list">${candList()}</div>`},
+matching(){
+ const j=J(ui.mj),c=C(ui.mc);let out='';
+ if(ui.ran&&j&&c){const r=match(j,c);
+  out=`<div class="card" style="margin-top:14px"><div class="row" style="align-items:center;justify-content:flex-start;gap:20px"><div class="ring" style="--p:${r.score};--c:var(--${tone(r.score)})"><i>${r.score}%</i></div>
+  <div><b style="font-size:17px">${esc(c.name)} → ${esc(j.title)}</b><div style="margin-top:6px">${chips(r.m,'ok')}${chips(r.u,'warn')}${chips(r.x,'bad')}</div>
+  <div class="mut" style="font-size:12px">green = confirmed · amber = only in résumé text · red = missing</div>
+  <div class="bar" style="margin:10px 0 0">Stage: <select onchange="moveStage('${c.id}',this.value)">${stageOpts(c.stage)}</select><button class="btn s p" onclick="go('pipeline')">Open pipeline</button></div></div></div>${aiReport(j,c,r)}</div>`;}
+ const rank=j?`<div class="card"><b>Ranking for ${esc(j.title)}</b>${S.cands.map(x=>({x,s:match(j,x).score})).sort((a,b)=>b.s-a.s).map(o=>`<div class="hb"><span style="width:150px">${esc(o.x.name)}</span><div style="width:${o.s*2}px;background:var(--${tone(o.s)})"></div><span>${o.s}%</span><button class="btn s" onclick="ui.mc='${o.x.id}';ui.ran=true;runLink();render()">Compare</button></div>`).join('')}</div>`:'';
+ return`<h2>Matching <span class="tag">Demo Prototype AI</span></h2><p class="sub">Compare a job's requirements with a candidate's skills</p>
+ <div class="two"><div><label>Job</label><select style="width:100%" onchange="ui.mj=this.value;ui.ran=false;render()"><option value="">Select job…</option>${S.jobs.map(x=>`<option value="${x.id}" ${x.id===ui.mj?'selected':''}>${esc(x.title)}</option>`).join('')}</select></div>
+ <div><label>Candidate</label><select style="width:100%" onchange="ui.mc=this.value;ui.ran=false;render()"><option value="">Select candidate…</option>${S.cands.map(x=>`<option value="${x.id}" ${x.id===ui.mc?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div></div>
+ <div class="bar" style="margin-top:12px"><button class="btn p" ${j&&c?'':'disabled'} onclick="runMatch()">Run AI Matching</button></div>${out}${rank}`},
+insights(){
+ const mx=a=>Math.max(1,...a.map(x=>x[1])),bars=(a,col)=>a.map(([l,v])=>`<div class="hb"><span>${esc(l)}</span><div style="width:${v/mx(a)*60}%;${col?'background:'+col:''}"></div><span>${v}</span></div>`).join('')||'<p class="mut">No data</p>';
+ const cnt=(arr)=>{const o={};arr.forEach(s=>o[s]=(o[s]||0)+1);return Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,8)};
+ const sc=S.cands.filter(c=>J(c.jobId)).map(c=>match(J(c.jobId),c).score);
+ return`<h2>Insights</h2><p class="sub">Pipeline and skill analytics</p><div class="two">
+ <div class="card"><b>Pipeline by stage</b>${bars(STAGES.map(s=>[s,S.cands.filter(c=>c.stage===s).length]))}</div>
+ <div class="card"><b>Match score distribution</b>${bars([['Strong (75+)',sc.filter(s=>s>=75).length],['Partial (50–74)',sc.filter(s=>s>=50&&s<75).length],['Weak (<50)',sc.filter(s=>s<50).length]],'var(--warn)')}</div>
+ <div class="card"><b>Top candidate skills (supply)</b>${bars(cnt(S.cands.flatMap(c=>c.skills)))}</div>
+ <div class="card"><b>Top required skills (demand, open jobs)</b>${bars(cnt(S.jobs.filter(j=>j.status==='open').flatMap(j=>j.skills)),'var(--ok)')}</div></div>`},
+pipeline(){return`<h2>Hiring Pipeline</h2><p class="sub">Drag cards between columns, or use the dropdown on each card</p><div class="kan">${STAGES.map(s=>{
+ const l=S.cands.filter(c=>c.stage===s);
+ return`<div class="col" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="this.classList.remove('over');moveStage(event.dataTransfer.getData('text'),'${s}')"><h4>${s}<span><span class="chip g">${l.length}</span> <button class="btn s" onclick="candForm('','${s}')">+</button></span></h4>
+ ${l.map(c=>{const j=J(c.jobId),r=j?match(j,c).score:null;return`<div class="k" draggable="true" ondragstart="event.dataTransfer.setData('text','${c.id}')"><b>${esc(c.name)}</b><div class="mut" style="font-size:12px">${j?esc(j.title):'No job linked'}</div>
+ ${r!==null?`<span class="chip ${tone(r)}">${r}% match</span>`:''}<select onchange="moveStage('${c.id}',this.value)">${stageOpts(c.stage)}</select></div>`}).join('')}</div>`}).join('')}</div>`}
+};
+function runMatch(){const j=J(ui.mj),c=C(ui.mc);ui.ran=true;c.jobId=j.id;log(`Matched ${c.name} to ${j.title}: ${match(j,c).score}%`);render()}
+function runLink(){const c=C(ui.mc),j=J(ui.mj);if(c&&j){c.jobId=j.id;log(`Matched ${c.name} to ${j.title}: ${match(j,c).score}%`)}}
+
+const TABS=[['dashboard','Dashboard'],['jobs','Jobs'],['candidates','Candidates'],['matching','Matching'],['insights','Insights'],['pipeline','Pipeline']];
+function render(){
+ $('#nav').innerHTML='<h1>TalentLens</h1>'+TABS.map(([k,l])=>`<button class="${k===view?'on':''}" onclick="go('${k}')">${l}</button>`).join('')+'<div class="sp"></div>'+langSel()+'<button class="rst" onclick="resetDemo()">Reset demo data</button>';
+ $('#main').innerHTML=V[view]();
+}
+/* ===== i18n: EN (source) + RU + UZ. DOM text is translated after every render via dictionary D (index 0=ru, 1=uz) ===== */
+let LANG='en';try{LANG=localStorage.getItem('tl.lang')||'en'}catch(e){}
+const IDX={ru:0,uz:1};
+const D={'Edit Job':['Редактировать вакансию','Vakansiyani tahrirlash'],'Edit Candidate':['Редактировать кандидата','Nomzodni tahrirlash'],'Edit':['Изменить','Tahrirlash'],'Save':['Сохранить','Saqlash'],'Dashboard':['Панель','Boshqaruv paneli'],'Jobs':['Вакансии','Vakansiyalar'],'Candidates':['Кандидаты','Nomzodlar'],'Matching':['Сопоставление','Moslashtirish'],'Insights':['Аналитика','Tahlil'],'Pipeline':['Воронка','Voronka'],'Hiring Pipeline':['Воронка найма','Yollash voronkasi'],'Reset demo data':['Сбросить демо-данные','Demo maʼlumotlarni tiklash'],'Demo data loaded':['Загружены демо-данные','Demo maʼlumotlar yuklandi'],
+'Recruitment overview':['Обзор рекрутинга','Rekrutingga umumiy nazar'],'Total jobs':['Всего вакансий','Jami vakansiyalar'],'Active candidates':['Активные кандидаты','Faol nomzodlar'],'Hired':['Нанято','Ishga olingan'],'Average match score':['Средний балл совпадения','Oʻrtacha moslik balli'],'Recent activity':['Последние действия','Soʻnggi harakatlar'],'5-step demo:':['Демо в 5 шагов:','5 bosqichli demo:'],
+'① Jobs → Create · ② Candidates → Add · ③ Matching → Run · ④ Read AI breakdown · ⑤ Pipeline → move stage':['① Вакансии → Создать · ② Кандидаты → Добавить · ③ Сопоставление → Запуск · ④ Разбор от ИИ · ⑤ Воронка → сменить этап','① Vakansiyalar → Yaratish · ② Nomzodlar → Qoʻshish · ③ Moslashtirish → Ishga tushirish · ④ AI tahlili · ⑤ Voronka → bosqichni oʻzgartirish'],
+'Open and closed positions':['Открытые и закрытые позиции','Ochiq va yopiq lavozimlar'],'+ Create New Job':['+ Создать вакансию','+ Yangi vakansiya'],'Search title, dept, skill…':['Поиск: название, отдел, навык…','Qidiruv: nomi, boʻlim, koʻnikma…'],'Match':['Сопоставить','Moslash'],'Close':['Закрыть','Yopish'],'Reopen':['Открыть снова','Qayta ochish'],'Delete':['Удалить','Oʻchirish'],'open':['открыта','ochiq'],'closed':['закрыта','yopiq'],'all':['все','hammasi'],'No jobs match.':['Вакансий не найдено.','Vakansiya topilmadi.'],
+'Talent database':['База талантов','Nomzodlar bazasi'],'+ Add Candidate':['+ Добавить кандидата','+ Nomzod qoʻshish'],'Search name/email…':['Поиск: имя/email…','Qidiruv: ism/email…'],'Skill filter':['Фильтр по навыку','Koʻnikma filtri'],'All stages':['Все этапы','Barcha bosqichlar'],'Min exp':['Мин. опыт','Min. tajriba'],'No candidates match.':['Кандидатов не найдено.','Nomzod topilmadi.'],
+'Applied':['Подал заявку','Ariza topshirdi'],'Screening':['Скрининг','Skrining'],'Interview':['Интервью','Suhbat'],'Offer':['Оффер','Taklif'],'Rejected':['Отказ','Rad etildi'],
+[`Compare a job's requirements with a candidate's skills`]:['Сравните требования вакансии с навыками кандидата','Vakansiya talablarini nomzod koʻnikmalari bilan solishtiring'],'Job':['Вакансия','Vakansiya'],'Candidate':['Кандидат','Nomzod'],'Select job…':['Выберите вакансию…','Vakansiyani tanlang…'],'Select candidate…':['Выберите кандидата…','Nomzodni tanlang…'],'Run AI Matching':['Запустить AI-сопоставление','AI moslashtirishni boshlash'],'Stage:':['Этап:','Bosqich:'],'Open pipeline':['Открыть воронку','Voronkani ochish'],'green = confirmed · amber = only in résumé text · red = missing':['зелёный — подтверждён · жёлтый — только в тексте резюме · красный — отсутствует','yashil — tasdiqlangan · sariq — faqat rezyume matnida · qizil — yoʻq'],'Compare':['Сравнить','Solishtirish'],
+'Pipeline and skill analytics':['Воронка и аналитика навыков','Voronka va koʻnikmalar tahlili'],'Pipeline by stage':['Воронка по этапам','Bosqichlar boʻyicha voronka'],'Match score distribution':['Распределение баллов совпадения','Moslik ballari taqsimoti'],'Strong (75+)':['Высокий (75+)','Yuqori (75+)'],'Partial (50–74)':['Средний (50–74)','Oʻrtacha (50–74)'],'Weak (<50)':['Низкий (<50)','Past (<50)'],'Top candidate skills (supply)':['Навыки кандидатов (предложение)','Nomzodlar koʻnikmalari (taklif)'],'Top required skills (demand, open jobs)':['Требуемые навыки (спрос, открытые вакансии)','Talab etilgan koʻnikmalar (talab, ochiq vakansiyalar)'],'No data':['Нет данных','Maʼlumot yoʻq'],
+'Drag cards between columns, or use the dropdown on each card':['Перетаскивайте карточки между колонками или используйте список на карточке','Kartalarni ustunlar orasida sudrang yoki kartadagi roʻyxatdan foydalaning'],'No job linked':['Вакансия не привязана','Vakansiya biriktirilmagan'],
+'Create New Job':['Создать вакансию','Yangi vakansiya yaratish'],'Title':['Название','Nomi'],'Department':['Отдел','Boʻlim'],'Requirements / skills (comma-separated)':['Требования / навыки (через запятую)','Talablar / koʻnikmalar (vergul bilan)'],'Description':['Описание','Tavsif'],'Create job':['Создать','Yaratish'],'Cancel':['Отмена','Bekor qilish'],'Add Candidate':['Добавить кандидата','Nomzod qoʻshish'],'Name':['Имя','Ism'],'Years of experience':['Опыт (лет)','Tajriba (yil)'],'Applying for':['На вакансию','Vakansiya'],'— none —':['— нет —','— yoʻq —'],'Résumé text':['Текст резюме','Rezyume matni'],'(or simulate upload)':['(или имитация загрузки)','(yoki yuklashni imitatsiya)'],'Paste résumé text…':['Вставьте текст резюме…','Rezyume matnini joylang…'],'Skills (comma-separated)':['Навыки (через запятую)','Koʻnikmalar (vergul bilan)'],'Extract skills from résumé':['Извлечь навыки из резюме','Rezyumedan koʻnikmalarni ajratish'],'Add candidate':['Добавить','Qoʻshish'],
+'Title and at least one skill are required.':['Нужны название и хотя бы один навык.','Nomi va kamida bitta koʻnikma kerak.'],'Name is required.':['Укажите имя.','Ism kiritilishi shart.'],'Delete this job?':['Удалить вакансию?','Vakansiya oʻchirilsinmi?'],'Delete this candidate?':['Удалить кандидата?','Nomzod oʻchirilsinmi?'],'Reset all data to the demo set?':['Сбросить все данные к демо-набору?','Barcha maʼlumotlar demo toʻplamga qaytarilsinmi?']};
+const PAT=[[/^Job updated: (.*)$/,['Обновлена вакансия: $1','Vakansiya yangilandi: $1']],[/^Candidate updated: (.*)$/,['Обновлён кандидат: $1','Nomzod yangilandi: $1']],[/^\((\d+) open\)$/,['($1 открыто)','($1 ta ochiq)']],[/^(.*) · (\d+) candidates$/,['$1 · кандидатов: $2','$1 · nomzodlar: $2']],[/^(.*) · (\d+) yrs · for (.*)$/,['$1 · опыт $2 л. · вакансия: $3','$1 · tajriba $2 yil · vakansiya: $3']],[/^(.*) · (\d+) yrs$/,['$1 · опыт $2 л.','$1 · tajriba $2 yil']],[/^(\d+)% match$/,['$1% совпадение','$1% moslik']],[/^Ranking for (.*)$/,['Рейтинг для: $1','Reyting: $1']],[/^Candidate added: (.*)$/,['Добавлен кандидат: $1','Nomzod qoʻshildi: $1']],[/^Job created: (.*)$/,['Создана вакансия: $1','Vakansiya yaratildi: $1']],[/^(.*) marked (open|closed)$/,['$1: статус — $2','$1: holati — $2']],[/^Matched (.*) to (.*): (\d+)%$/,['Сопоставлено: $1 → $2 ($3%)','Moslashtirildi: $1 → $2 ($3%)']],[/^(.*): (Applied|Screening|Interview|Offer|Hired|Rejected) → (.*)$/,['$1: $2 → $3','$1: $2 → $3']]];
+const w=x=>Object.hasOwn(D,x)?D[x][IDX[LANG]]:x;
+function tr(s){const m=s.match(/^(\s*)([\s\S]*?)(\s*)$/),k=m[2];if(!k)return s;
+ if(Object.hasOwn(D,k))return m[1]+w(k)+m[3];
+ for(const[re,t]of PAT){const x=k.match(re);if(x)return m[1]+t[IDX[LANG]].replace(/\$(\d)/g,(_,n)=>w(x[n]))+m[3]}
+ return s}
+function applyLang(){if(LANG==='en')return;document.documentElement.lang=LANG;
+ for(const sel of['#nav','#main','#mbox','#fab']){const root=$(sel),tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;
+  while(n=tw.nextNode()){const v=tr(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v}
+  root.querySelectorAll('[placeholder]').forEach(e=>e.placeholder=tr(e.placeholder))}}
+new MutationObserver(applyLang).observe(document.body,{childList:true,subtree:true});
+function toast(m){let t=$('#toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:20;box-shadow:0 4px 14px #0003';document.body.appendChild(t)}t.textContent=m;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>{t.hidden=true},2600)}
+/* Native confirm()/alert() are blocked inside the hosted iframe, so use an in-page dialog and toast instead */
+function ask(m,fn,label){openM(`<p style="font-size:16px;margin:0 0 14px">${esc(m)}</p><div class="bar"><button class="btn p" id="okb">${label}</button><button class="btn" onclick="closeM()">Cancel</button></div>`);$('#okb').onclick=()=>{closeM();fn()}}
+window.alert=m=>toast(LANG==='en'?m:tr(m));
+function setLang(l){LANG=l;try{localStorage.setItem('tl.lang',l)}catch(e){}document.documentElement.lang=l;render()}
+function langSel(){return`<select class=lg onchange=setLang(this.value)>${[['en','English'],['ru','Русский'],['uz','Oʻzbekcha']].map(([k,n])=>`<option value=${k} ${k===LANG?'selected':''}>${n}</option>`).join('')}</select>`}
+/* AI panel text for RU/UZ (EN lives in aiReportEN) */
+const AIT={
+ru:{h:['AI-ассистент','Объяснение совпадения навыков','Пробелы / неподтверждённые навыки','Предлагаемые вопросы для интервью','Технические','Поведенческие'],v:['сильное совпадение','частичное совпадение','слабое совпадение'],a:(n,j,v,s)=>`<b>${n}</b> — ${v} для вакансии «${j}» (${s}%).`,b:(m,t,l)=>`Подтверждено навыков: ${m} из ${t}${m?': '+l:''}.`,c:e=>`Опыт работы: ${e} лет.`,d:l=>`В резюме упоминаются <b>${l}</b>, но их нет в списке навыков — стоит проверить.`,g1:s=>`<b>${s}</b> — нет в резюме (критический пробел).`,g2:s=>`<b>${s}</b> — лишь косвенно в тексте резюме (не подтверждён).`,t1:s=>`Для роли нужен ${s}. Как вы освоите его за первые 30 дней?`,t2:s=>`В резюме есть намёк на ${s}. Расскажите о конкретном проекте.`,t3:s=>`Опишите проблему в продакшене, которую вы решили с помощью ${s}, и принятые компромиссы.`,beh:j=>['Расскажите, как вам пришлось быстро освоить новый инструмент в сжатые сроки.','Опишите технические разногласия с коллегой и как вы их разрешили.',`Почему вас заинтересовала позиция «${j}» и почему сейчас?`],none:'Пробелов нет — все требования подтверждены.',note:'Демо-результат на основе правил — не решение о найме.'},
+uz:{h:['AI yordamchi','Koʻnikmalar mosligi izohi','Bo‘shliqlar / tasdiqlanmagan koʻnikmalar','Tavsiya etilgan intervyu savollari','Texnik','Xulq-atvor'],v:['kuchli mos','qisman mos','kam mos'],a:(n,j,v,s)=>`<b>${n}</b> — «${j}» vakansiyasi uchun ${v} (${s}%).`,b:(m,t,l)=>`Tasdiqlangan koʻnikmalar: ${m}/${t}${m?': '+l:''}.`,c:e=>`Ish tajribasi: ${e} yil.`,d:l=>`Rezyumeda <b>${l}</b> eslatilgan, lekin koʻnikmalar roʻyxatida yoʻq — tekshirish kerak.`,g1:s=>`<b>${s}</b> — rezyumeda yoʻq (jiddiy bo‘shliq).`,g2:s=>`<b>${s}</b> — rezyume matnida faqat bilvosita (tasdiqlanmagan).`,t1:s=>`Lavozim uchun ${s} kerak. Dastlabki 30 kunda uni qanday oʻzlashtirasiz?`,t2:s=>`Rezyumeda ${s} haqida ishora bor. Aniq loyiha haqida soʻzlab bering.`,t3:s=>`${s} yordamida hal qilgan production muammosini va qabul qilgan murosalarni tasvirlang.`,beh:j=>['Yangi vositani qisqa muddatda tez oʻrganishingizga toʻgʻri kelgan holatni aytib bering.','Hamkasb bilan texnik kelishmovchilik va uni qanday hal qilganingizni tasvirlang.',`Nega «${j}» lavozimi va nega aynan hozir?`],none:'Bo‘shliqlar yoʻq — barcha talablar tasdiqlangan.',note:'Qoidalarga asoslangan demo natija — yollash qarori emas.'}};
+function aiReport(job,c,r){
+ if(LANG==='en')return aiReportEN(job,c,r);
+ const T=AIT[LANG],n=esc(c.name),j=esc(job.title),L=a=>a.map(esc).join(', '),ul=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+ const why=[T.a(n,j,T.v[r.score>=75?0:r.score>=50?1:2],r.score),T.b(r.m.length,job.skills.length,L(r.m)),T.c(c.exp)];
+ if(r.u.length)why.push(T.d(L(r.u)));
+ const gaps=[...r.x.map(s=>T.g1(esc(s))),...r.u.map(s=>T.g2(esc(s)))];
+ const tech=[...r.x.map(s=>T.t1(esc(s))),...r.u.map(s=>T.t2(esc(s))),...r.m.slice(0,2).map(s=>T.t3(esc(s)))];
+ return`<div class='ai'><h3>${T.h[0]} <span class='tag'>Demo Prototype AI</span></h3><h4>${T.h[1]}</h4>${ul(why)}<h4>${T.h[2]}</h4>${gaps.length?ul(gaps):`<p class='mut'>${T.none}</p>`}<h4>${T.h[3]}</h4><b>${T.h[4]}</b>${ul(tech)}<b>${T.h[5]}</b>${ul(T.beh(j))}<p class='mut' style='font-size:12px;margin:10px 0 0'>${T.note}</p></div>`}
+render();
+</script></body></html>
